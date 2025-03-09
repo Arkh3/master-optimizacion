@@ -9,8 +9,8 @@ def seccion_aurea(function, search_interval, max_error=0.001):
 
     while i < max_iter and (b - a) >= max_error:
         # Puntos posibles
-        aux_1 = b- razon_aurea * (b- a)
-        aux_2 = a + razon_aurea * (b- a)
+        aux_1 = b- razon_aurea * (b - a)
+        aux_2 = a + razon_aurea * (b - a)
 
         theta_1 = function(aux_1)
         theta_2 = function(aux_2)
@@ -30,7 +30,7 @@ def seccion_aurea(function, search_interval, max_error=0.001):
 
 
 def main():
-    theta = lambda lamb: (5- 2*lamb + (4 + lamb)**3)**2 + 2*(-3- 3*lamb)**4
+    theta = lambda lamb: (5 - 2 * lamb + (4 + lamb)**3)**2 + 2 * (-3 - 3 * lamb)**4
     search_interval = (-5, 5)
     
     min = seccion_aurea(theta, search_interval)

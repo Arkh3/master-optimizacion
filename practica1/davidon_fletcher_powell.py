@@ -1,7 +1,13 @@
 import numpy as np
 
-def davidon_fletcher_powell(function, grad_function, x0=[0.0, 0.0], max_error=1e-6, max_iter=100):
+def search_lambda(function, grad, xn, d, lam=1.0, rho=0.5, c=0.1):
 
+    while function(xn + lam * d) > function(xn) + c * lam * np.dot(grad, d):
+        lam *= rho
+
+    return lam
+
+def davidon_fletcher_powell(function, grad_function, x0=[0.0, 0.0], max_error=1e-6, max_iter=10000):
     j = 1
 
     # Matriz identidad como aproximación inicial del Hessiano inverso
@@ -10,28 +16,20 @@ def davidon_fletcher_powell(function, grad_function, x0=[0.0, 0.0], max_error=1e
     xn = x0
     grad = grad_function(xn)
 
-    while j < max_iter and np.linalg.norm(grad) > max_error:
-    
+    while j < max_iter and np.linalg.norm(grad) >= max_error:
         # Dirección
         d = -D @ grad 
 
         # Paso 1
-        lam = 1 
-        c = 1e-4
-        rho = 0.9
-
-        while function(xn + lam * d) > function(xn) + c * lam * np.dot(grad, d):
-            lam *= rho
+        lam = search_lambda(function, grad, xn, d)
 
         # Paso 2
         x_new = xn + lam * d
         p = x_new - xn
         q = grad_function(x_new) - grad
 
-        if np.dot(p, q) > 0:  # Evitar divisiones por cero o valores negativos
-            rho = 1.0 / np.dot(p, q)
-            Dy = D @ q
-            D = D + rho * np.outer(p, p) - (np.outer(Dy, p) + np.outer(p, Dy)) / np.dot(q, p)
+        Dy = D @ q
+        D = D - np.outer(Dy, Dy) / (q @ Dy) + np.outer(p, p) / (q @ (lam * d))
 
         xn = x_new
         grad = grad_function(xn)
@@ -48,9 +46,9 @@ def main():
     
     x0 = [0.0, 0.0]
 
-    min, xn = davidon_fletcher_powell(f, grad_f, x0)
+    min, x_min = davidon_fletcher_powell(f, grad_f, x0)
 
-    print(f"min f() = f({xn}) = {min}")
+    print(f"min f() = f({x_min}) = {min}")
 
     return 0
 

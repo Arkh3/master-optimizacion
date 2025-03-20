@@ -76,7 +76,7 @@ def davidon_fletcher_powell(
         grad = grad_function(xn)
         j += 1
 
-    return function(xn), xn
+    return xn, function(xn)
 
 
 def main():

@@ -14,6 +14,3 @@ Instrucciones de ejecución:
         - Modificar la función 'f', el gradiente de f 'grad_f' y el punto inicial de búsqueda 'x0' en la función main() de davidon_fletcher_powell.py a los valores deseados.
         - Ejecutar el código: python3 davidon_fletcher_powell.py
 
-
-
-Notas adicionales:
